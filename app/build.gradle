@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.robert.maps"
         minSdkVersion 3
         targetSdkVersion 10
-        versionCode 8141
-        versionName "0.9.5.b1"
+        versionCode 8142
+        versionName "0.9.5.b2"
     }
     buildTypes {
         release {

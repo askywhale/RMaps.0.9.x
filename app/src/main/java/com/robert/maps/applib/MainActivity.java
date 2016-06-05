@@ -32,6 +32,7 @@ import android.preference.PreferenceManager;
 import android.provider.Browser;
 import android.provider.SearchRecentSuggestions;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -160,7 +161,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
         if(!OpenStreetMapViewConstants.DEBUGMODE)
         	CrashReportHandler.attach(this);
 
@@ -220,21 +221,6 @@ public class MainActivity extends Activity {
 
 		if(uiState.getString("error", "").length() > 0){
 			showDialog(R.id.error);
-		}
-
-		
-		if (!uiState.getString("app_version", "").equalsIgnoreCase(Ut.getAppVersion(this))) {
-			DisplayMetrics metrics = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			
-//			mTracker.setCustomVar(1, "Build", Ut.getAppVersion(this), 1);
-//			mTracker.setCustomVar(2, "Ver", Ut.getPackVersion(this), 1);
-//			mTracker.setCustomVar(3, "DisplaySize", ""+Math.min(metrics.widthPixels, metrics.heightPixels)+"x"+Math.max(metrics.widthPixels, metrics.heightPixels), 1);
-//			mTracker.setCustomVar(4, "DisplayDensity", ""+(int)(160*metrics.density), 1);
-//			mTracker.setCustomVar(5, "APILevel", Build.VERSION.SDK, 1);
-//			mTracker.trackPageView("/InstallApp");
-			
-			showDialog(R.id.whatsnew);
 		}
 		
 		final Intent queryIntent = getIntent();
@@ -1356,14 +1342,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		if (id == R.id.add_yandex_bookmark) {
-			return new AlertDialog.Builder(this)
-				.setTitle(R.string.ya_dialog_title)
-				.setMessage(R.string.ya_dialog_message)
-				.setPositiveButton(R.string.ya_dialog_button_caption, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							Browser.saveBookmark(MainActivity.this, "��������� ������", "m.yandex.ru");
-						}
-				}).create();
+			// down
 		} else if (id == R.id.whatsnew) {
 			return new AlertDialog.Builder(this) //.setIcon( R.drawable.alert_dialog_icon)
 					.setTitle(R.string.about_dialog_whats_new)

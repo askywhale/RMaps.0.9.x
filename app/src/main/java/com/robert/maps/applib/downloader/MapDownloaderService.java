@@ -291,9 +291,10 @@ public class MapDownloaderService extends Service {
 		// mContentIntent = PendingIntent.getActivity(this, 0, new Intent(this,
 		// MainActivity.class), 0);
 		// Set the info for the views that show in the notification panel.
-		mNotification.setLatestEventInfo(this, getText(R.string.downloader_notif_title),
-				getText(R.string.downloader_notif_text), mContentIntent);
-		
+		//DEPRECATED mNotification.setLatestEventInfo(this, getText(R.string.downloader_notif_title),
+		//		getText(R.string.downloader_notif_text), mContentIntent);
+
+
 		// Send the notification.
 		// We use a string id because it is a unique number. We use it later to
 		// cancel.
@@ -350,13 +351,13 @@ public class MapDownloaderService extends Service {
 				mTileCnt++;
 				if (msg.what == R.id.tile_error)
 					mErrorCnt++;
-				
-				mNotification.setLatestEventInfo(
-						MapDownloaderService.this,
-						getText(R.string.downloader_notif_title),
-						getText(R.string.downloader_notif_text)
-								+ String.format(": %d%% (%d/%d)", (mTileCnt * 100 / mTileCntTotal), mTileCnt,
-										mTileCntTotal), mContentIntent);
+
+                //DEPRECATED mNotification.setLatestEventInfo(
+				//		MapDownloaderService.this,
+                //		getText(R.string.downloader_notif_title),
+                //		getText(R.string.downloader_notif_text)
+                //				+ String.format(": %d%% (%d/%d)", (mTileCnt * 100 / mTileCntTotal), mTileCnt,
+                //						mTileCntTotal), mContentIntent);
 				if (mNM != null)
 					mNM.notify(R.id.downloader_service, mNotification);
 				
