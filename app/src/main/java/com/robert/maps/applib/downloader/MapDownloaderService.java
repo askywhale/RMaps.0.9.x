@@ -13,8 +13,10 @@ import android.os.Message;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.widget.Toast;
+import android.support.v4.app.NotificationCompat;
 
 import com.robert.maps.R;
+import com.robert.maps.applib.MainActivity;
 import com.robert.maps.applib.tileprovider.TileProviderFileBase;
 import com.robert.maps.applib.tileprovider.TileSource;
 import com.robert.maps.applib.utils.SQLiteMapDatabase;
@@ -57,7 +59,7 @@ public class MapDownloaderService extends Service {
 	private TileSource mTileSource;
 	private ExecutorService mThreadPool = Executors.newFixedThreadPool(THREADCOUNT, new SimpleThreadFactory(
 			"MapDownloaderService"));
-	private Handler mHandler = new DownloaderHanler();
+	private Handler mHandler = new DownloaderHandler();
 	final RemoteCallbackList<IDownloaderCallback> mCallbacks = new RemoteCallbackList<IDownloaderCallback>();
 	private int mTileCntTotal = 0, mTileCnt = 0, mErrorCnt = 0;
 	private long mStartTime = 0;
@@ -275,16 +277,16 @@ public class MapDownloaderService extends Service {
 		
 		super.onDestroy();
 	}
-	
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
+
 	private void showNotification() {
 		// In this sample, we'll use the same text for the ticker and the
 		// expanded notification
 		CharSequence text = getText(R.string.downloader_notif_ticket);
 		
 		// Set the icon, scrolling text and timestamp
-		mNotification = new Notification(R.drawable.r_download, text, System.currentTimeMillis());
-		mNotification.flags = mNotification.flags | Notification.FLAG_NO_CLEAR;
+		//mNotification = new Notification(, , System.currentTimeMillis());
+		//mNotification.flags = mNotification.flags | Notification.FLAG_NO_CLEAR;
+       // mNotification.contentView =
 		
 		// The PendingIntent to launch our activity if the user selects this
 		// notification
@@ -293,13 +295,24 @@ public class MapDownloaderService extends Service {
 		// Set the info for the views that show in the notification panel.
 		//DEPRECATED mNotification.setLatestEventInfo(this, getText(R.string.downloader_notif_title),
 		//		getText(R.string.downloader_notif_text), mContentIntent);
-
-
 		// Send the notification.
 		// We use a string id because it is a unique number. We use it later to
 		// cancel.
 		//mNM.notify(R.id.downloader_service, mNotification);
-		startForegroundCompat(R.id.downloader_service, mNotification);
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(this);
+        b.setSmallIcon(R.drawable.r_download);
+        b.setContentTitle(getText(R.string.downloader_notif_title));
+        b.setContentText(getText(R.string.downloader_notif_text));
+        b.setWhen(System.currentTimeMillis());
+        b.setOngoing(true);
+        mContentIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+                MainActivity.class), 0);
+        b.setContentIntent(mContentIntent);
+        mNotification = b.build();
+        mNM.notify(R.id.downloader_service, mNotification);
+
+        startForegroundCompat(R.id.downloader_service, mNotification);
 	}
 	
 	private void downloadDone() {
@@ -338,7 +351,7 @@ public class MapDownloaderService extends Service {
 		return mBinder;
 	}
 	
-	private class DownloaderHanler extends Handler {
+	private class DownloaderHandler extends Handler {
 		private int doneCounter = 0;
 		
 		@Override

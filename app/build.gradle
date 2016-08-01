@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.robert.maps"
-        minSdkVersion 3
+        minSdkVersion 4
         targetSdkVersion 10
         versionCode 8142
         versionName "0.9.5.b2"
@@ -21,4 +21,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:support-v4:23.4.0"
 }

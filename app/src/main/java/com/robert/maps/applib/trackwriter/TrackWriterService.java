@@ -19,9 +19,11 @@ import android.os.Message;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.robert.maps.R;
+import com.robert.maps.applib.MainActivity;
 import com.robert.maps.applib.kml.TrackListActivity;
 import com.robert.maps.applib.kml.TrackStatHelper;
 import com.robert.maps.applib.utils.DistanceFormatter;
@@ -191,13 +193,24 @@ public class TrackWriterService extends Service implements OpenStreetMapConstant
 	private void showNotification() {
 		CharSequence text = getText(R.string.remote_service_started);
 
-		mNotification = new Notification(R.drawable.track_writer_service, text, System.currentTimeMillis());
-		mNotification.flags = mNotification.flags | Notification.FLAG_NO_CLEAR;
+        //DEPRECATED
+		//mNotification = new Notification(R.drawable.track_writer_service, text, System.currentTimeMillis());
+		//mNotification.flags = mNotification.flags | Notification.FLAG_NO_CLEAR;
+        //	mContentIntent = PendingIntent.getActivity(this, 0,
+		//		new Intent(this, TrackListActivity.class), 0);
+		//mNotification.setLatestEventInfo(this, getText(R.string.remote_service_started), text, mContentIntent);
 
-		mContentIntent = PendingIntent.getActivity(this, 0,
-				new Intent(this, TrackListActivity.class), 0);
+        NotificationCompat.Builder b = new NotificationCompat.Builder(this);
+        b.setSmallIcon(R.drawable.track_writer_service);
+        b.setContentTitle(getText(R.string.remote_service_started));
+        b.setContentText(text);
+        b.setOngoing(true);
+        b.setWhen(System.currentTimeMillis());
 
-		//DERECATED mNotification.setLatestEventInfo(this, getText(R.string.remote_service_started), text, mContentIntent);
+        mContentIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+                MainActivity.class), 0);
+        b.setContentIntent(mContentIntent);
+        mNotification = b.build();
 
 		startForegroundCompat(R.string.remote_service_started, mNotification);
 	}
