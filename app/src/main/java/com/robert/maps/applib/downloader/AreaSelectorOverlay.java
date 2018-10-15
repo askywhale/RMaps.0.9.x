@@ -25,6 +25,7 @@ public class AreaSelectorOverlay extends TileViewOverlay {
 	private int mPointHolded = -1;
 	private Bitmap mCornerMarker = null;
 	private boolean mAreaCleared = false;
+	private int mPointTouchWidthAndHeight = 0;
 	
 	public void Init(Context ctx, TileView tileView, int left, int top, int right, int bottom) {
 		mRect.set(left, top, right, bottom);
@@ -36,6 +37,9 @@ public class AreaSelectorOverlay extends TileViewOverlay {
 		mPaint.setAlpha(180);
 		mPaint.setStrokeCap(Paint.Cap.ROUND);
 		mPaint.setShadowLayer(10.0f, 0, 0, ctx.getResources().getColor(R.color.chart_graph_0));
+
+		// 40 => .25 in (around 8mm)
+        mPointTouchWidthAndHeight = (int)(ctx.getResources().getDisplayMetrics().density * 40);
 	}
 	
 	public void Init(Context ctx, TileView tileView) {
@@ -118,8 +122,8 @@ public class AreaSelectorOverlay extends TileViewOverlay {
 	}
 	
 	private void setAreaBound(Rect bound, int x, int y) {
-		final int area = 20;
-		bound.set(x - area, y - area, x + area, y + area);
+		bound.set(x - mPointTouchWidthAndHeight / 2, y - mPointTouchWidthAndHeight / 2,
+                x + mPointTouchWidthAndHeight / 2, y + mPointTouchWidthAndHeight / 2);
 	}
 
 	@Override
