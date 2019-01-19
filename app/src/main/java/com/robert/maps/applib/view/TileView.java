@@ -57,10 +57,10 @@ public class TileView extends View {
 	private VerScaleGestureDetector mScaleDetector = VerScaleGestureDetector.newInstance(getContext(), new ScaleListener());
 	
 	private class ScaleListener implements VerScaleGestureDetector.OnGestureListener {
-//		private double mPrevScaleFactor = 1.0;
+		private double mPrevScaleFactor = 1.0;
 
 		public void onScale(double aScaleFactor) {
-			mTouchScale = aScaleFactor;
+			mTouchScale = aScaleFactor * mPrevScaleFactor;
 			
 //			mTouchScale = mPrevScaleFactor + (aScaleFactor >= 1.0 ? (aScaleFactor /*- 1.0*/) : (1 - 1 / aScaleFactor));
 //			if(mTouchScale < 0.0)
@@ -76,13 +76,13 @@ public class TileView extends View {
 		public void onScaleEnd() {
 			int zoom = 0;
 			if(mTileSource.ZOOM_MAXLEVEL == getZoomLevel() && mTouchScale > 1) {
-//				mPrevScaleFactor = mTouchScale;
+				mPrevScaleFactor = mTouchScale;
 				return; 
 			} else if(mTouchScale > 1) {
-//				mPrevScaleFactor = 1.0;
+				mPrevScaleFactor = 1.0;
 				zoom = getZoomLevel()+(int)Math.round(mTouchScale)-1;
 			} else {
-//				mPrevScaleFactor = 1.0;
+				mPrevScaleFactor = 1.0;
 				zoom = getZoomLevel()-(int)Math.round(1/mTouchScale)+1;
 			}
 			
