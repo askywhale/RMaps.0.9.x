@@ -1,5 +1,7 @@
 package com.robert.maps.applib.preference;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -9,8 +11,11 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.util.Log;
 
 import com.robert.maps.R;
+
+import java.io.File;
 
 public class UserMapsPrefActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	private String mKey;
@@ -40,13 +45,22 @@ public class UserMapsPrefActivity extends PreferenceActivity implements OnShared
 			pref.setDefaultValue(false);
 			prefscr.addPreference(pref);
 		}
+
+		{
+			final CheckBoxPreference pref = new CheckBoxPreference(this);
+			pref.setKey(mKey + "_toremove");
+			pref.setTitle(getString(R.string.pref_usermap_toremove));
+			pref.setSummary(getString(R.string.pref_usermap_toremove_summary));
+			pref.setDefaultValue(false);
+			prefscr.addPreference(pref);
+		}
+
 		{
 			final EditTextPreference pref = new EditTextPreference(this);
 			pref.setKey(mKey + "_name");
 			pref.setTitle(getString(R.string.pref_usermap_name));
 			pref.setDefaultValue(bundle.getString("Name"));
 			prefscr.addPreference(pref);
-			
 			pref.setSummary(pref.getText());
 			prefscr.setTitle(pref.getText());
 		}
@@ -110,6 +124,26 @@ public class UserMapsPrefActivity extends PreferenceActivity implements OnShared
 			findPreference(aKey).setSummary(aPref.getString(aKey, ""));
 			findPreference(aKey.replace("_name", "")).setTitle(aPref.getString(aKey, ""));
 			
+		} else if (aKey.endsWith("toremove") && aPref.getBoolean(aKey, false)) {
+		    final String usermapFile = getIntent().getExtras().getString("AbsolutePath");
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.pref_usermap_toremove_confirm)
+       			.setTitle(usermapFile)
+       			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		               File f = new File(usermapFile);
+		               if(f.exists()) {
+                           Log.i("UserMapsPrefActivity", "Removing usermap " + usermapFile);
+                           f.delete();
+                           UserMapsPrefActivity.this.finish();
+                       }
+		           }
+		       	})
+				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) { }
+		       	});
+			AlertDialog dialog = builder.create();
+			dialog.show();
 		} else if (aKey.endsWith("projection") && findPreference(aKey) != null) {
 			ListPreference pref = (ListPreference) findPreference(aKey);
 			findPreference(aKey).setSummary(pref.getEntry());

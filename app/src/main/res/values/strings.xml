@@ -35,6 +35,9 @@
     <string name="pref_gpsfastupdate_summary">Slow updating saves the battery theoretically</string>
     <string name="pref_usermap_enabled">Enabled map</string>
     <string name="pref_usermap_enabled_summary">Add map to maps list</string>
+    <string name="pref_usermap_toremove">Remove</string>
+    <string name="pref_usermap_toremove_summary">Will remove this user map</string>
+    <string name="pref_usermap_toremove_confirm">Remove this user map ?</string>
     <string name="pref_usermap_name">Name</string>
     <string name="pref_usermap_baseurl">Base URL</string>
     <string name="pref_usermap_projection">Projection</string>
